@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../components/product_gridview.dart';
+import '../models/cart.dart';
+import '../utils/app_routes.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -22,6 +25,20 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
+          Consumer<Cart>(
+            child: IconButton(
+              icon: const Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.cartScreen);
+              },
+            ),
+            builder: (ctx, cart, child) => Badge.count(
+              count: cart.itemCount,
+              isLabelVisible: cart.itemCount > 0,
+              textColor: Theme.of(context).textTheme.displaySmall?.color,
+              child: child!,
+            ),
+          ),
           PopupMenuButton(
             itemBuilder: (_) => [
               const PopupMenuItem(

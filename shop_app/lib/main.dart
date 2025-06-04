@@ -4,6 +4,7 @@ import 'package:shop_app/theme/theme.dart';
 
 import 'models/cart.dart';
 import 'models/product_list.dart';
+import 'screens/cart_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/product_details.dart';
 import 'utils/app_routes.dart';
@@ -29,7 +30,10 @@ class MyApp extends StatelessWidget {
         darkTheme: purpleDarkTheme,
         themeMode: ThemeMode.system,
         home: const MyHomePage(title: 'Minha Loja'),
-        routes: {AppRoutes.productDetails: (context) => const ProductDetails()},
+        routes: {
+          AppRoutes.productDetails: (context) => const ProductDetails(),
+          AppRoutes.cartScreen: (context) => const CartScreen(),
+        },
       ),
     );
   }

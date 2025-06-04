@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
+import 'package:shop_app/models/product.dart';
 
 import 'cart_item.dart';
 
@@ -10,33 +13,47 @@ class Cart with ChangeNotifier {
 
   int get itemCount => _items.length;
 
-  Decimal get totalAmount {
-    return _items.values.fold(
-      Decimal.zero,
-      (sum, item) =>
-          sum +
-          Decimal.parse(item.price) *
-              Decimal.parse(item.quantity),
-    );
+  String get totalAmount {
+    return _items.values
+        .fold(
+          Decimal.zero,
+          (sum, item) =>
+              sum + Decimal.parse(item.price) * Decimal.parse(item.quantity),
+        )
+        .toString();
   }
 
-  void addItem(CartItem item) {
-    if (_items.containsKey(item.productId)) {
+  String getItemSubtotal(String id) {
+    if (!_items.containsKey(id)) {
+      return 'R\$ 0,00';
+    } else {
+      final item = _items[id]!;
+      return (Decimal.parse(item.price) * Decimal.parse(item.quantity))
+          .toString();
+    }
+  }
+
+  void addItem(Product product) {
+    if (_items.containsKey(product.id)) {
       _items.update(
-        item.productId,
+        product.id,
         (existingItem) => existingItem.copyWith(
-          quantity: existingItem.quantity + item.quantity,
-          price: existingItem.price + item.price,
+          quantity: (Decimal.parse(existingItem.quantity) + Decimal.one)
+              .toString(),
         ),
       );
     } else {
-      _items.putIfAbsent(item.productId, () => item);
+      _items.putIfAbsent(
+        product.id,
+        () => CartItem(
+          id: Random().nextInt(99).toString(),
+          productId: product.id,
+          name: product.title,
+          quantity: '1',
+          price: product.price,
+        ),
+      );
     }
-    notifyListeners();
-  }
-
-  void removeItem(String productId) {
-    _items.remove(productId);
     notifyListeners();
   }
 

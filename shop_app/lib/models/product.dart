@@ -8,7 +8,7 @@ class Product with ChangeNotifier {
   final String title;
   final String description;
   final String imageUrl;
-  final double price;
+  final String price;
   bool isFavorite;
 
   Product({
@@ -30,7 +30,7 @@ class Product with ChangeNotifier {
     String? title,
     String? description,
     String? imageUrl,
-    double? price,
+    String? price,
     bool? isFavorite,
   }) {
     return Product(
@@ -60,7 +60,7 @@ class Product with ChangeNotifier {
       title: map['title'] as String,
       description: map['description'] as String,
       imageUrl: map['imageUrl'] as String,
-      price: map['price'] as double,
+      price: map['price'] as String,
       isFavorite: map['isFavorite'] as bool,
     );
   }

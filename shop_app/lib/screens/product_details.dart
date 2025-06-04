@@ -8,15 +8,11 @@ class ProductDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final n1 = Decimal.parse("0.1") + Decimal.parse("0.2");
     final product = ModalRoute.of(context)?.settings.arguments as Product;
     return Scaffold(
       appBar: AppBar(title: Text(product.title)),
-      body: Column(
-        children: [
-          Text("${Decimal.parse("0.1") + Decimal.parse("0.2")}"),
-          Text("${0.2+0.1}"),
-        ],
-      ),
+      body: Column(children: [Text(n1.toString()), Text("${0.2 + 0.1}")]),
     );
   }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/cart.dart';
-import '../models/cart_item.dart';
 import '../models/product.dart';
+import '../models/product_list.dart';
 import '../utils/app_routes.dart';
 
 class ProductItem extends StatelessWidget {
@@ -12,6 +12,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
+    final provider = Provider.of<ProductList>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadiusGeometry.circular(10.0),
@@ -21,7 +22,7 @@ class ProductItem extends StatelessWidget {
           leading: Consumer<Product>(
             builder: (ctx, product, _) => IconButton(
               onPressed: () {
-                product.toggleFavorite();
+                provider.toggleFavorite(product);
               },
               icon: product.isFavorite
                   ? Icon(Icons.favorite, color: Colors.red.shade700)
@@ -31,15 +32,7 @@ class ProductItem extends StatelessWidget {
           title: Text(product.title, textAlign: TextAlign.center),
           trailing: IconButton(
             onPressed: () {
-              cart.addItem(
-                CartItem(
-                  id: DateTime.now().toString(),
-                  productId: product.id,
-                  name: product.title,
-                  quantity: '1',
-                  price: product.price.toStringAsFixed(2),
-                ),
-              );
+              cart.addItem(product);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
