@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../components/home_drawer.dart';
 import '../components/product_gridview.dart';
 import '../models/cart.dart';
 import '../utils/app_routes.dart';
@@ -63,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: ProductGridView(showFavoriteOnly: _showFavoriteOnly),
+      drawer: const HomeDrawer(),
     );
   }
 }

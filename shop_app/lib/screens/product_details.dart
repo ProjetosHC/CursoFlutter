@@ -1,4 +1,3 @@
-import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 
 import '../models/product.dart';
@@ -8,11 +7,32 @@ class ProductDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final n1 = Decimal.parse("0.1") + Decimal.parse("0.2");
     final product = ModalRoute.of(context)?.settings.arguments as Product;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(title: Text(product.title)),
-      body: Column(children: [Text(n1.toString()), Text("${0.2 + 0.1}")]),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image.network(
+              product.imageUrl,
+              height: screenHeight * 0.4,
+              width: screenWidth,
+              fit: BoxFit.cover,
+            ),
+            const SizedBox(height: 10.0),
+            Text(
+              product.title,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              'R\$ ${product.price}',
+              style: const TextStyle(fontSize: 20, color: Colors.green),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
