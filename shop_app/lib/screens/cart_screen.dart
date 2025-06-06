@@ -9,13 +9,13 @@ import '../models/order_list.dart';
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
-  void _showConfirmDialog(
-    String title,
+  Future<bool?> _showConfirmDialog(
     BuildContext context,
+    String title,
     String message,
-    VoidCallback onConfirm,
+    bool isBuying,
   ) {
-    showDialog(
+    return showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
@@ -23,13 +23,25 @@ class CartScreen extends StatelessWidget {
         content: Text(message),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
+            onPressed: () => Navigator.of(ctx).pop(false),
             child: const Text('Cancelar'),
           ),
           ElevatedButton(
             onPressed: () {
-              onConfirm();
-              Navigator.of(context).popAndPushNamed(AppRoutes.homeScreen);
+              Navigator.of(
+                ctx,
+              ).popAndPushNamed(AppRoutes.homeScreen, result: true);
+              ScaffoldMessenger.of(ctx).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    isBuying
+                        ? "Compra realizada com sucesso!"
+                        : 'Carrinho limpo com sucesso!',
+                    textAlign: TextAlign.center,
+                  ),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
             },
             child: const Text('Confirmar'),
           ),
@@ -84,24 +96,18 @@ class CartScreen extends StatelessWidget {
                                   width: 1.0,
                                 ),
                               ),
-                              onPressed: () {
-                                _showConfirmDialog(
-                                  'Limpar carrinho',
+                              onPressed: () async {
+                                final bool?
+                                isConfirmed = await _showConfirmDialog(
                                   context,
+                                  'Limpar carrinho',
                                   'Você tem certeza que deseja limpar o carrinho?',
-                                  () {
-                                    cart.clear();
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Carrinho limpo com sucesso!',
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        duration: const Duration(seconds: 2),
-                                      ),
-                                    );
-                                  },
+                                  false,
                                 );
+                                if (isConfirmed == true &&
+                                    isConfirmed != null) {
+                                  cart.clear();
+                                }
                               },
                               child: Text("Limpar".toUpperCase()),
                             ),
@@ -116,25 +122,17 @@ class CartScreen extends StatelessWidget {
       ),
       floatingActionButton: cart.itemCount > 0
           ? FloatingActionButton.extended(
-              onPressed: () {
-                _showConfirmDialog(
-                  "Confirmar compra",
+              onPressed: () async {
+                final bool? isConfirmed = await _showConfirmDialog(
                   context,
-                  "Deseja finalizar sua compra?",
-                  () {
-                    order.addOrder(cart);
-                    cart.clear();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Compra realizada com sucesso!',
-                          textAlign: TextAlign.center,
-                        ),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                  },
+                  'Confirmar compra',
+                  'Você tem certeza que deseja finalizar a compra?',
+                  true,
                 );
+                if (isConfirmed == true && isConfirmed != null) {
+                  order.addOrder(cart);
+                  cart.clear();
+                }
               },
               label: Text(
                 'Comprar'.toUpperCase(),

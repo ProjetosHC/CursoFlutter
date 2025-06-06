@@ -33,6 +33,7 @@ class ProductItem extends StatelessWidget {
           trailing: IconButton(
             onPressed: () {
               cart.addItem(product);
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -40,6 +41,13 @@ class ProductItem extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   duration: const Duration(seconds: 2),
+                  action: SnackBarAction(
+                    label: 'Desfazer'.toUpperCase(),
+                    onPressed: () {
+                      cart.removeSingleItem(product.id);
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    },
+                  ),
                 ),
               );
             },

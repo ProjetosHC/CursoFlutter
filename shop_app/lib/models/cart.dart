@@ -62,6 +62,24 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
+  void removeSingleItem(String id) {
+    if (_items.containsKey(id)) {
+      final existingItem = _items[id]!;
+      if (Decimal.parse(existingItem.quantity) > Decimal.one) {
+        _items.update(
+          id,
+          (existingItem) => existingItem.copyWith(
+            quantity: (Decimal.parse(existingItem.quantity) - Decimal.one)
+                .toString(),
+          ),
+        );
+      } else {
+        _items.remove(id);
+      }
+    }
+    notifyListeners();
+  }
+
   void clear() {
     _items.clear();
     notifyListeners();

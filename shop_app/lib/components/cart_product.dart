@@ -6,6 +6,40 @@ import 'package:shop_app/models/cart.dart';
 class CartProduct extends StatelessWidget {
   const CartProduct({super.key});
 
+  Future<bool?> _showConfirmDialog(
+    BuildContext context,
+    String title,
+    String message,
+    String product,
+  ) {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Não'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(ctx).pop(true);
+              ScaffoldMessenger.of(ctx).showSnackBar(
+                SnackBar(
+                  content: Text('$product removido do carrinho.'),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            },
+            child: const Text('Sim'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context, listen: false);
@@ -23,17 +57,16 @@ class CartProduct extends StatelessWidget {
               motion: const BehindMotion(),
               children: [
                 SlidableAction(
-                  onPressed: (context) {
-                    cart.removeItem(product.productId);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          '${product.name} removido com sucesso!',
-                          textAlign: TextAlign.center,
-                        ),
-                        duration: const Duration(seconds: 2),
-                      ),
+                  onPressed: (context) async {
+                    final bool? isConfirmed = await _showConfirmDialog(
+                      context,
+                      "Tem certeza?",
+                      "Deseja remover ${product.name} do carrinho?",
+                      product.name,
                     );
+                    if (isConfirmed == true && isConfirmed != null) {
+                      cart.removeItem(product.productId);
+                    }
                   },
                   backgroundColor: Theme.of(context).colorScheme.error,
                   icon: Icons.delete_sharp,
