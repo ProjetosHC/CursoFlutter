@@ -25,6 +25,15 @@ class HomeDrawer extends StatelessWidget {
               Navigator.of(context).pushReplacementNamed(AppRoutes.orders);
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.storage_sharp),
+            title: const Text('Produtos'),
+            onTap: () {
+              Navigator.of(
+                context,
+              ).pushReplacementNamed(AppRoutes.productScreen);
+            },
+          ),
         ],
       ),
     );

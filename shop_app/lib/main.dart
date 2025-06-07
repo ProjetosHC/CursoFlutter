@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:shop_app/theme/theme.dart';
+import 'package:provider/provider.dart';
 
 import 'models/cart.dart';
 import 'models/order_list.dart';
@@ -10,6 +9,9 @@ import 'screens/cart_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/order_screen.dart';
 import 'screens/product_details.dart';
+import 'screens/product_form.dart';
+import 'screens/product_screen.dart';
+import 'theme/theme.dart';
 import 'utils/app_routes.dart';
 
 void main() {
@@ -46,6 +48,8 @@ class MyApp extends StatelessWidget {
           AppRoutes.orders: (context) => const OrderScreen(),
           AppRoutes.homeScreen: (context) =>
               const MyHomePage(title: 'Minha Loja'),
+          AppRoutes.productScreen: (context) => const ProductScreen(),
+          AppRoutes.productForm: (context) => const ProductForm(),
         },
       ),
     );

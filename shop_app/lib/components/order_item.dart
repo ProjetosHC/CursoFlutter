@@ -1,6 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shop_app/utils/capitalize.dart';
 
 import '../models/cart_item.dart';
 import '../models/order.dart';
@@ -70,13 +71,5 @@ class OrderItem extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-extension StringExtensions on String {
-  String capitalize() {
-    return split(' ')
-        .map((word) => word.substring(0, 1).toUpperCase() + word.substring(1))
-        .join(' ');
   }
 }
