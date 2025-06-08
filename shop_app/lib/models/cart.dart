@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
-import 'package:shop_app/models/product.dart';
 
 import 'cart_item.dart';
+import 'product.dart';
 
 class Cart with ChangeNotifier {
   final Map<String, CartItem> _items = {};
@@ -20,7 +20,7 @@ class Cart with ChangeNotifier {
           (sum, item) =>
               sum + Decimal.parse(item.price) * Decimal.parse(item.quantity),
         )
-        .toString();
+        .toStringAsFixed(2);
   }
 
   String getItemSubtotal(String id) {
@@ -29,7 +29,7 @@ class Cart with ChangeNotifier {
     } else {
       final item = _items[id]!;
       return (Decimal.parse(item.price) * Decimal.parse(item.quantity))
-          .toString();
+          .toStringAsFixed(2);
     }
   }
 

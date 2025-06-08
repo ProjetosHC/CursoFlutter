@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/utils/app_logger.dart';
 
 import 'models/cart.dart';
 import 'models/order_list.dart';
@@ -15,6 +16,7 @@ import 'theme/theme.dart';
 import 'utils/app_routes.dart';
 
 void main() {
+  AppLogger.init(isProduction: false);
   runApp(const MyApp());
 }
 

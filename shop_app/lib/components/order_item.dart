@@ -49,7 +49,7 @@ class OrderItem extends StatelessWidget {
               final String subtotal =
                   (Decimal.parse(product.quantity) *
                           Decimal.parse(product.price))
-                      .toString();
+                      .toStringAsFixed(2);
               return ListTile(
                 title: Text(product.name),
                 subtitle: Row(

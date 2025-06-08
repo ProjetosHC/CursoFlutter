@@ -30,7 +30,7 @@ class CartScreen extends StatelessWidget {
             onPressed: () {
               Navigator.of(
                 ctx,
-              ).popAndPushNamed(AppRoutes.homeScreen, result: true);
+              ).pushReplacementNamed(AppRoutes.homeScreen, result: true);
               ScaffoldMessenger.of(ctx).showSnackBar(
                 SnackBar(
                   content: Text(
