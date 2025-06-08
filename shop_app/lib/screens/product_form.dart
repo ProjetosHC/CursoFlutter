@@ -1,7 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 import '../models/product.dart';
 import '../models/product_list.dart';
@@ -26,6 +25,23 @@ class _ProductFormState extends State<ProductForm> {
   void initState() {
     super.initState();
     _focusImage.addListener(_updateImage);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_formData.isEmpty) {
+      final arg = ModalRoute.of(context)?.settings.arguments;
+      if (arg != null) {
+        final product = arg as Product;
+        _formData['id'] = product.id;
+        _formData['name'] = product.title;
+        _formData['description'] = product.description;
+        _formData['imageUrl'] = product.imageUrl;
+        _formData['price'] = product.price;
+        _imageController.text = product.imageUrl;
+      }
+    }
   }
 
   @override
@@ -58,14 +74,8 @@ class _ProductFormState extends State<ProductForm> {
       return;
     }
     _formKey.currentState?.save();
-    final newProduct = Product(
-      id: Uuid().v4(),
-      title: _formData['name']!,
-      description: _formData['description']!,
-      imageUrl: _formData['imageUrl']!,
-      price: _formData['price']!,
-    );
-    Provider.of<ProductList>(ctx, listen: false).addProduct(newProduct);
+
+    Provider.of<ProductList>(ctx, listen: false).saveProduct(_formData);
     ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
     ScaffoldMessenger.of(ctx).showSnackBar(
       SnackBar(
@@ -97,6 +107,7 @@ class _ProductFormState extends State<ProductForm> {
               Container(
                 margin: const EdgeInsets.only(bottom: 10.0),
                 child: TextFormField(
+                  initialValue: _formData['name'] ?? '',
                   decoration: InputDecoration(labelText: "Nome"),
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (value) =>
@@ -117,6 +128,7 @@ class _ProductFormState extends State<ProductForm> {
               Container(
                 margin: const EdgeInsets.only(bottom: 10.0),
                 child: TextFormField(
+                  initialValue: _formData['description'] ?? '',
                   decoration: InputDecoration(labelText: "Descrição"),
                   focusNode: _focusDescription,
                   keyboardType: TextInputType.multiline,
@@ -176,6 +188,7 @@ class _ProductFormState extends State<ProductForm> {
               Container(
                 margin: const EdgeInsets.only(top: 10.0),
                 child: TextFormField(
+                  initialValue: _formData['price'] ?? '',
                   decoration: InputDecoration(labelText: "Preço"),
                   textInputAction: TextInputAction.done,
                   focusNode: _focusPrice,

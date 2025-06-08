@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../models/product.dart';
+import '../utils/app_routes.dart';
 
 class ProductEdit extends StatelessWidget {
   const ProductEdit({super.key, required this.product});
@@ -19,7 +20,11 @@ class ProductEdit extends StatelessWidget {
           extentRatio: 0.5,
           children: [
             SlidableAction(
-              onPressed: (context) {},
+              onPressed: (context) {
+                Navigator.of(
+                  context,
+                ).pushNamed(AppRoutes.productForm, arguments: product);
+              },
               icon: Icons.edit_sharp,
               label: "Editar",
               backgroundColor: Colors.blueAccent,

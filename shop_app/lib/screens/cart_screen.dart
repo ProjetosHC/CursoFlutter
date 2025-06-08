@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/utils/app_routes.dart';
 
 import '../components/cart_product.dart';
 import '../models/cart.dart';
 import '../models/order_list.dart';
+import '../utils/app_routes.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
   Future<bool?> _showConfirmDialog(
     BuildContext context,
     String title,
@@ -28,9 +33,7 @@ class CartScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(
-                ctx,
-              ).pushReplacementNamed(AppRoutes.homeScreen, result: true);
+              Navigator.of(ctx).pop(true);
               ScaffoldMessenger.of(ctx).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -108,6 +111,13 @@ class CartScreen extends StatelessWidget {
                                     isConfirmed != null) {
                                   cart.clear();
                                 }
+                                if (!context.mounted) {
+                                  return;
+                                }
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                  AppRoutes.homeScreen,
+                                  (route) => false,
+                                );
                               },
                               child: Text("Limpar".toUpperCase()),
                             ),
@@ -133,6 +143,13 @@ class CartScreen extends StatelessWidget {
                   order.addOrder(cart);
                   cart.clear();
                 }
+                if (!context.mounted) {
+                  return;
+                }
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  AppRoutes.homeScreen,
+                  (route) => false,
+                );
               },
               label: Text(
                 'Comprar'.toUpperCase(),
