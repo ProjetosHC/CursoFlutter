@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 
 import '../models/product.dart';
+import '../models/product_list.dart';
+import '../utils/app_logger.dart';
 import '../utils/app_routes.dart';
 
 class ProductEdit extends StatelessWidget {
@@ -9,8 +12,34 @@ class ProductEdit extends StatelessWidget {
 
   final Product product;
 
+  Future<bool?> _showConfirmDialog(
+    BuildContext context,
+    String title,
+    String message,
+  ) {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Confirmar'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final productList = Provider.of<ProductList>(context, listen: false);
     return Container(
       margin: const EdgeInsets.all(5.0),
       child: Slidable(
@@ -30,7 +59,21 @@ class ProductEdit extends StatelessWidget {
               backgroundColor: Colors.blueAccent,
             ),
             SlidableAction(
-              onPressed: (context) {},
+              onPressed: (context) async {
+                try {
+                  final bool? confirm = await _showConfirmDialog(
+                    context,
+                    "Excluir Produto",
+                    "Você tem certeza que deseja excluir este produto?",
+                  );
+
+                  if (confirm != null && confirm) {
+                    productList.removeProduct(product);
+                  }
+                } catch (e) {
+                  AppLogger.error('Erro ao excluir produto: $e');
+                }
+              },
               icon: Icons.delete_sharp,
               label: "Excluir",
               backgroundColor: Colors.redAccent,

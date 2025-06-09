@@ -46,4 +46,15 @@ class ProductList with ChangeNotifier {
       AppLogger.error('Product with id: ${product.id} not found!');
     }
   }
+
+  void removeProduct(Product product) {
+    int index = _items.indexWhere((p) => p.id == product.id);
+
+    if (index >= 0) {
+      _items.removeAt(index);
+      notifyListeners();
+    } else {
+      AppLogger.error('Product with id: ${product.id} not found!');
+    }
+  }
 }
